@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  smart-editor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    container_name: smart-editor
+    restart: unless-stopped
+
+    # Live development: mount source to /app (build container stage not affected)
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+    # Environment variables (override with .env)
+    environment:
+      - NODE_ENV=production
+      - PORT=80
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
