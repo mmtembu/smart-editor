@@ -1,4 +1,4 @@
-name: Test and Deploy to VPC
+name: Test and Deploy via SSH
 
 on:
   push:
@@ -24,22 +24,15 @@ jobs:
       - name: 🧪 Run Unit Tests
         run: npm test -- --ci
 
-      - name: 📤 Copy project to VPC via SCP
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPC_HOST }}
-          username: ${{ secrets.VPC_USER }}
-          key: ${{ secrets.VPC_SSH_KEY }}
-          source: "."
-          target: "/home/${{ secrets.VPC_USER }}/smart-editor-app"
-
-      - name: 🚀 Deploy via SSH
+      - name: 🚀 SSH to VPS, git pull and redeploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPC_HOST }}
           username: ${{ secrets.VPC_USER }}
           key: ${{ secrets.VPC_SSH_KEY }}
           script: |
-            cd ~/smart-editor-app
+            cd ~/smart-editor
+            git reset --hard
+            git pull origin main
             docker-compose down
             docker-compose up --build -d
