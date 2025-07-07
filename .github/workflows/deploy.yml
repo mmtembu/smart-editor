@@ -31,7 +31,7 @@ jobs:
           username: ${{ secrets.VPC_USER }}
           key: ${{ secrets.VPC_SSH_KEY }}
           script: |
-            cd ~/smart-editor
+            cd ~/smart-editor-app
             git reset --hard
             git pull origin main
             docker-compose down
