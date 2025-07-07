@@ -22,7 +22,7 @@ jobs:
         run: npm ci
 
       - name: 🧪 Run Unit Tests
-        run: npm test -- --ci --reporters=default --reporters=jest-junit
+        run: npm test -- --ci
 
       - name: 📤 Copy project to VPC via SCP
         uses: appleboy/scp-action@v0.1.7
