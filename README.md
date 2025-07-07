@@ -1,3 +1,7 @@
+# smart-editor
+This web based applications enables users to be able to format code and data (json, xml and markup) properly and aligned.
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
