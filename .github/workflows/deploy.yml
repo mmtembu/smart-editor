@@ -1,4 +1,4 @@
-name: Deploy to VPC
+name: Test and Deploy to VPC
 
 on:
   push:
@@ -6,14 +6,25 @@ on:
       - main
 
 jobs:
-  deploy:
+  test-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: 📥 Checkout Code
         uses: actions/checkout@v3
 
-      - name: Copy project to VPC via SSH
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: 🧪 Run Unit Tests
+        run: npm test -- --ci --reporters=default --reporters=jest-junit
+
+      - name: 📤 Copy project to VPC via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPC_HOST }}
@@ -22,7 +33,7 @@ jobs:
           source: "."
           target: "/home/${{ secrets.VPC_USER }}/smart-editor-app"
 
-      - name: Deploy over SSH
+      - name: 🚀 Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPC_HOST }}
